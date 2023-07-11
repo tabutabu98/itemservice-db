@@ -18,8 +18,8 @@ public class MemoryItemRepository implements ItemRepository {
 
     @Override
     public Item save(Item item) {
-        item.setId(++sequence);
-        store.put(item.getId(), item);
+        item.setId(++sequence); // 식별자 증가
+        store.put(item.getId(), item); // Item 저장
         return item;
     }
 
@@ -42,19 +42,22 @@ public class MemoryItemRepository implements ItemRepository {
         Integer maxPrice = cond.getMaxPrice();
         return store.values().stream()
                 .filter(item -> {
-                    if (ObjectUtils.isEmpty(itemName)) {
-                        return true;
+                    if (ObjectUtils.isEmpty(itemName)) { // Item의 상품명이 비어있는 경우
+                        return true; // Item 반환
                     }
-                    return item.getItemName().contains(itemName);
+                    return item.getItemName().contains(itemName); // 입력한 상품명을 포함하는 Item만 반환
                 }).filter(item -> {
-                    if (maxPrice == null) {
-                        return true;
+                    if (maxPrice == null) { // Item의 가격제한이 걸려있지 않은 경우
+                        return true; // Item 반환
                     }
-                    return item.getPrice() <= maxPrice;
+                    return item.getPrice() <= maxPrice; // 입력한 가격제한 이하의 Item만 반환
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()); // Item List 반환
     }
 
+    /**
+     * Map 객체 클리어
+     */
     public void clearStore() {
         store.clear();
     }

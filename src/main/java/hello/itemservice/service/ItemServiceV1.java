@@ -14,7 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ItemServiceV1 implements ItemService {
 
-    private final ItemRepository itemRepository;
+    private final ItemRepository itemRepository; // 상품 저장소
 
     @Override
     public Item save(Item item) {

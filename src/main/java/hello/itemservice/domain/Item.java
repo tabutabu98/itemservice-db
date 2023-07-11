@@ -5,11 +5,11 @@ import lombok.Data;
 @Data
 public class Item {
 
-    private Long id;
+    private Long id; // 상품 식별자
 
-    private String itemName;
-    private Integer price;
-    private Integer quantity;
+    private String itemName; // 상품명
+    private Integer price; // 가격
+    private Integer quantity; // 수량
 
     public Item() {
     }
