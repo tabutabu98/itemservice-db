@@ -4,6 +4,7 @@ import hello.itemservice.domain.Item;
 import hello.itemservice.repository.ItemRepository;
 import hello.itemservice.repository.ItemSearchCond;
 import hello.itemservice.repository.ItemUpdateDto;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -32,7 +33,9 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
     @Override
     public Item save(Item item) {
         String sql = "INSERT INTO ITEM(ITEM_NAME, PRICE, QUANTITY) VALUES (?, ?, ?)";
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
+
         template.update(connection -> {
             // 자동 증가 키
             PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
@@ -42,8 +45,10 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
             return ps;
         }, keyHolder);
 
-        long key = keyHolder.getKey().longValue();
+        long key = Objects.requireNonNull(keyHolder.getKey()).longValue();
+
         item.setId(key);
+
         return item;
     }
 
@@ -79,7 +84,7 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
     public List<Item> findAll(ItemSearchCond cond) {
         String itemName = cond.getItemName();
         Integer maxPrice = cond.getMaxPrice();
-
+        
         String sql = "SELECT ID, ITEM_NAME, PRICE, QUANTITY FROM ITEM";
 
         // 동적 쿼리
@@ -89,11 +94,13 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
 
         boolean andFlag = false;
         List<Object> param = new ArrayList<>();
+
         if (StringUtils.hasText(itemName)) {
             sql += " ITEM_NAME LIKE CONCAT('%',?,'%')";
             param.add(itemName);
             andFlag = true;
         }
+
         if (maxPrice != null) {
             if (andFlag) {
                 sql += " AND";
@@ -101,7 +108,9 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
             sql += " PRICE <= ?";
             param.add(maxPrice);
         }
+
         log.info("sql={}", sql);
+
         return template.query(sql, itemRowMapper(), param.toArray());
     }
 }
