@@ -63,6 +63,9 @@ public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
         String sql = "SELECT ID, ITEM_NAME, PRICE, QUANTITY FROM ITEM WHERE ID = ?";
         try {
             Item item = template.queryForObject(sql, itemRowMapper(), id);
+
+            assert item != null;
+
             return Optional.of(item);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
