@@ -27,7 +27,6 @@ import org.springframework.util.StringUtils;
  * - BeanPropertySqlParameterSource
  * - MapSqlParameterSource
  * Map
- *
  * BeanPropertyRowMapper
  */
 @Slf4j
