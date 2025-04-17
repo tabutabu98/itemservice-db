@@ -53,7 +53,8 @@ class ItemRepositoryTest {
         Item savedItem = itemRepository.save(item);
 
         //then
-        Item findItem = itemRepository.findById(item.getId()).get();
+        Item findItem = itemRepository.findById(item.getId())
+            .orElseThrow(() -> new RuntimeException("Item Not Found"));
         assertThat(findItem).isEqualTo(savedItem);
     }
 
@@ -69,7 +70,8 @@ class ItemRepositoryTest {
         itemRepository.update(itemId, updateParam);
 
         //then
-        Item findItem = itemRepository.findById(itemId).get();
+        Item findItem = itemRepository.findById(itemId)
+            .orElseThrow(() -> new RuntimeException("Item Not Found"));
         assertThat(findItem.getItemName()).isEqualTo(updateParam.getItemName());
         assertThat(findItem.getPrice()).isEqualTo(updateParam.getPrice());
         assertThat(findItem.getQuantity()).isEqualTo(updateParam.getQuantity());
